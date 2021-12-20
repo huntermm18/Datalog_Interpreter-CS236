@@ -38,7 +38,7 @@ public:
     Token(TokenType type, std::string description, int line);
 
     // TODO: add other needed methods
-    void toString();
+    void toString() const;
     TokenType typeOfToken;
     string value;
 };

@@ -52,7 +52,7 @@ string TokenTypeToString(TokenType tokenType) {
    return "ERROR";
 }
 
-void Token::toString() {
+void Token::toString() const {
    stringstream ss;
    ss << "(" + TokenTypeToString(typeOfToken) + "," + "\"" + value + "\",";
    ss <<  lineNumber;

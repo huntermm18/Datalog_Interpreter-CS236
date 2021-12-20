@@ -370,5 +370,4 @@ void Parser::toString() {
    for (auto it = domain.begin(); it != domain.end(); ++it) {
       cout << "  " << *it << endl;
    }
-
 }

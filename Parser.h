@@ -5,20 +5,14 @@
 #include "Lexer.h"
 #include <set>
 #include <iostream>
-
 using namespace std;
-
 
 class Parser {
 
 protected:
 
     int nextToken = 0;
-    // DatalogProgram theProgram;
     vector<Token*> tokens;
-    bool success{};
-
-
 
 public:
 
@@ -52,9 +46,6 @@ public:
 
     void toString();
 
-
-
 };
-
 
 #endif //PROJECT1_STARTER_CODE_PARSER_H

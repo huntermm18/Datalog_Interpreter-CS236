@@ -54,9 +54,8 @@ void Lexer::Run(std::string& input) {
       maxRead = 0;
       maxAutomaton = automata.at(0);
 
-      if (!input.empty()) { //fixme
+      if (!input.empty()) {
          while (isspace(input[0])) {
-            //if (input[0] == '\t') {input.erase(input.begin());}
             if (input[0] == '\n') {
                lineNumber++;
             }
@@ -67,7 +66,6 @@ void Lexer::Run(std::string& input) {
             }
          }
       }
-
 
       for (unsigned int i = 0; i < automata.size(); ++i) {
          automata[i]->inputRead = automata[i]->Start(input);

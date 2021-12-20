@@ -1,9 +1,10 @@
 #include "Rule.h"
 #include <iostream>
+#include <utility>
 
 Rule::Rule(Predicate* headPredicate, vector<Predicate*> bodyPredicates) {
    this->headPredicate = headPredicate;
-   this->bodyPredicates = bodyPredicates;
+   this->bodyPredicates = move(bodyPredicates);
 }
 
 void Rule::toString() {

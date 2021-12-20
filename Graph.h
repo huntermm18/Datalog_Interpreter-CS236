@@ -1,8 +1,6 @@
 #ifndef PROJECT1_STARTER_CODE_GRAPH_H
 #define PROJECT1_STARTER_CODE_GRAPH_H
 
-#include "Node.h"
-
 #include <set>
 #include <map>
 #include <vector>
@@ -15,7 +13,7 @@ class Graph {
 public:
 
 
-    Graph(vector<Rule*>& rules);
+    explicit Graph(vector<Rule*>& rules);
 
     map<int, set<int>> adjacencyList;
     map<int, set<int>> reverseGraphAdjacencyList;
@@ -29,7 +27,7 @@ public:
    void depthFirstSearchOnReverse(int index); // create two. one for post order and one for scc
    void depthFirstSearchOnOriginal(int index);
    void depthFirstSearchForrest();
-    vector<set<int>> dfsForrestForSCCs();
+   vector<set<int>> dfsForrestForSCCs();
 
    void dependencyGraphToString();
    vector<int> getRuleIndexFromVector(Predicate* predicate);

@@ -1,10 +1,11 @@
 #include "Predicate.h"
 #include <iostream>
+#include <utility>
 using namespace std;
 
 Predicate::Predicate(string id, vector<Parameter*> parameters) {
-   this->id = id;
-   this->parameters = parameters;
+   this->id = move(id);
+   this->parameters = move(parameters);
 }
 
 void Predicate::toString() {

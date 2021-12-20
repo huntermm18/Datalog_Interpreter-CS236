@@ -42,8 +42,6 @@ add_executable(Project1_Starter_Code
         Tuple.h
         Relation.cpp
         Relation.h
-        Scheme.h
-        Database.cpp
         Database.h
         Header.h
         Interpreter.cpp

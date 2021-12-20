@@ -1,4 +1,3 @@
-
 #ifndef PROJECT1_STARTER_CODE_PREDICATE_H
 #define PROJECT1_STARTER_CODE_PREDICATE_H
 
@@ -6,9 +5,6 @@
 #include <vector>
 
 class Predicate {
-protected:
-
-
 
 public:
     void toString();
@@ -17,6 +13,5 @@ public:
     Predicate(string id, vector<Parameter*> parameters);
 
 };
-
 
 #endif //PROJECT1_STARTER_CODE_PREDICATE_H

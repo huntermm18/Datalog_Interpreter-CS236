@@ -9,7 +9,7 @@ int ColonDashAutomaton::S0(const std::string& input) {
     else {
         Serr();
     }
-    return inputRead; //fixme (was 1 and worked?)
+    return inputRead;
 }
 
 void ColonDashAutomaton::S1(const std::string& input) {

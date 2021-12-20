@@ -6,7 +6,6 @@
 #include <vector>
 using namespace std;
 
-
 class DatalogProgram {
 
 public:
@@ -16,7 +15,6 @@ public:
     vector<Rule*> rules;
     set<string> domain;
 
-// public:
    DatalogProgram(vector<Predicate*> schemes,
       vector<Predicate*> facts,
       vector<Predicate*> queries,

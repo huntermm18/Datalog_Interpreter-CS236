@@ -1,4 +1,3 @@
-
 #include "Interpreter.h"
 #include <iostream>
 
@@ -43,16 +42,9 @@ void Interpreter::factsToTuplesHelper() {
    }
 }
 
-void Interpreter::databaseToString() {
-   database.toString();
-}
-
 Interpreter::Interpreter(DatalogProgram *program) {
    dataProgram = program;
-   constructorHelper(); // makes relations and adds them to database
-}
 
-void Interpreter::constructorHelper() {
    // make relation for each scheme and add to database
    Interpreter::schemesToRelationsHelper();
 
@@ -98,19 +90,7 @@ Relation* Interpreter::evaluatePredicate(const Predicate& p) {
          }
       }
    }
-   //newRelation->toString();
-//   variables.clear();
-//   variableOrderList.clear();
    return newRelation;
-}
-
-int getIndexOfStringInVec(vector<string> stringVec, const string& targetString) {
-   for (unsigned int i = 0; i < stringVec.size(); ++i) {
-      if (stringVec.at(i) == targetString) {
-         return i;
-      }
-   }
-   return -1; // failed to find case
 }
 
 vector<int> Interpreter::createIndexVecForProjectOnNewRelation (Relation* relation, Predicate* headPredicate) {
@@ -157,9 +137,6 @@ bool Interpreter::evaluateOneRule(Rule* rule) {
 
    Relation finalRelation;
    finalRelation = relations[0];
-//   pair<Relation, bool> finalRelationJoinPair;
-
-   //finalRelation.toString();
 
    for (unsigned int i = 1; i < relations.size(); ++i) { // skip 0
       finalRelation = finalRelation.join(relations.at(i));
@@ -280,7 +257,6 @@ void Interpreter::evaluateAllQueries() {
    for (Predicate* query : dataProgram->queries) {
       evaluateQuery(query);
    }
-
 }
 
 void Interpreter::queriesToString() {

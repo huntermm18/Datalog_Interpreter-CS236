@@ -8,9 +8,6 @@ using namespace std;
 
 class Parameter {
     // could be STRING or ID
-protected:
-
-
 
 public:
 
@@ -26,7 +23,6 @@ public:
           isConstant = false;
        }
     }
-
 };
 
 

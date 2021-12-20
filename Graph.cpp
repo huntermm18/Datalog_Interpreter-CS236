@@ -13,12 +13,12 @@ vector<int> Graph::getRuleIndexFromVector(Predicate* predicate) {
    vector<int> returnIndexes;
    for (unsigned int i = 0; i < rules.size(); ++i) {
       if (rules.at(i)->headPredicate->id == predicate->id) {
-         //cout << "returning: " << i << endl;
          returnIndexes.push_back(i);
       }
    }
    return returnIndexes;
 }
+
 Graph::Graph(vector<Rule *>& rules) {
    this->rules = rules;
    // create nodes for each rule in the vector
@@ -33,7 +33,6 @@ Graph::Graph(vector<Rule *>& rules) {
       Rule* currentRule = rules.at(i);
 
       for (Predicate* predicate : currentRule->bodyPredicates) {
-         //int ruleIndex = getRuleIndexFromVector(predicate);
          vector<int> ruleIndexes = getRuleIndexFromVector(predicate);
          for (int index : ruleIndexes) {
             adjacencyList.at(i).insert(index);
@@ -42,8 +41,6 @@ Graph::Graph(vector<Rule *>& rules) {
       }
    }
 }
-
-
 
 void Graph::dependencyGraphToString() {
    cout << "Dependency Graph" << endl;
@@ -63,7 +60,6 @@ void Graph::dependencyGraphToString() {
 }
 
 void Graph::depthFirstSearchForrest() {
-   //vector<int> visited;
    int currentNode = 0;
    while(visited.size() < adjacencyList.size()) {
       if (visited.find(currentNode) == visited.end()) {
@@ -73,9 +69,6 @@ void Graph::depthFirstSearchForrest() {
    }
    //tempSCC.clear();
    visited.clear();
-//   for (int num : postorderList) {
-//      cout << num << ",";
-//   } cout << endl;
 }
 
 void Graph::depthFirstSearchOnReverse(int index) {
@@ -91,7 +84,6 @@ void Graph::depthFirstSearchOnReverse(int index) {
       }
    }
    postorderList.push_back(index);
-   //tempSCC.insert(index);
 }
 void Graph::depthFirstSearchOnOriginal(int index) {
    // postorder

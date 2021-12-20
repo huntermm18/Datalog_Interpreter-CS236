@@ -2,7 +2,7 @@
 #ifndef PROJECT1_STARTER_CODE_DATABASE_H
 #define PROJECT1_STARTER_CODE_DATABASE_H
 
-// can't include datalog.h
+
 #include "Relation.h"
 #include <map>
 

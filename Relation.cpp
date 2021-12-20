@@ -11,6 +11,7 @@ void Relation::toString() {
       t.toString();
    }
 }
+
 void Relation::ruleEvaluationToString() {
    for(Tuple t : rowsAddedByRules) {
       if (t.values.size() == 0) {
@@ -38,6 +39,7 @@ Relation::Relation() {
    set<Tuple> rows;
    this->name = "";
 }
+
 Relation::Relation(string name, Header header, set<Tuple> rows) {
    this->name = std::move(name);
    this->header = &header;
@@ -83,7 +85,7 @@ void Relation::project (const vector<int>& indexValues) {
       delete newTuple;
    }
 
-   Header* newHeader3 = new Header;
+   auto* newHeader3 = new Header;
    newHeader3->attributes = newHeader->attributes;
    this->header = newHeader3;
    this->rows = newRows;
@@ -178,7 +180,7 @@ Relation Relation::join (Relation r2) {
    return returnRelation;
 }
 
-bool Relation::unionWith (Relation r2) {
+bool Relation::unionWith (const Relation& r2) {
    bool madeUpdate = false;
    for (unsigned int i = 0; i < header->attributes.size(); ++i) { // compatible check. Can delete
       if (header->attributes.at(i) != r2.header->attributes.at(i)) {

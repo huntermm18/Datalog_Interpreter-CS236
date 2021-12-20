@@ -10,8 +10,8 @@
 class Relation {
 protected:
     vector<pair<int,int>> combineHeaders(Header* header2, Relation& returnRelation) const;
-    bool isJoinable(Tuple tuple1, Tuple tuple2, const vector<pair<int,int>>& matchIndexes);
-    Tuple combineTuples(Tuple tuple1, Tuple tuple2, const vector<pair<int,int>>& matchIndexes);
+    static bool isJoinable(Tuple tuple1, Tuple tuple2, const vector<pair<int,int>>& matchIndexes);
+    static Tuple combineTuples(Tuple tuple1, Tuple tuple2, const vector<pair<int,int>>& matchIndexes);
 
 
 public:
@@ -37,14 +37,10 @@ public:
 
 
    Relation join (Relation r2);
-   bool unionWith (Relation r2);
+   bool unionWith (const Relation& r2);
 
-
-
-   // void addTuple(Tuple);
    void toString();
    void ruleEvaluationToString();
-
 };
 
 

@@ -7,7 +7,7 @@
 #include "Database.h"
 #include "Graph.h"
 
-class Interpreter { //not required class
+class Interpreter {
 
 protected:
     DatalogProgram* dataProgram{};
@@ -18,15 +18,13 @@ public:
     vector<string> variableOrderList;
 
     explicit Interpreter(DatalogProgram* program);
-    void constructorHelper();
     Interpreter() = default;
     void evaluateQuery(Predicate* query);
     void evaluateAllQueries();
-    void databaseToString();
     void queriesToString();
 
     Relation evaluatePredicateBasic(const Predicate& p);
-    Relation* evaluatePredicate(const Predicate& p); // optional recommended function
+    Relation* evaluatePredicate(const Predicate& p);
 
     void schemesToRelationsHelper();
     void factsToTuplesHelper();
@@ -36,9 +34,6 @@ public:
     Relation* getRelationByName(const string& name);
 
     static vector<int> createIndexVecForProjectOnNewRelation(Relation* relation, Predicate* headPredicate);
-    //vector<int> Interpreter::createIndexVecForProjectOnNewRelation2 (Relation* relation, Predicate* headPredicate);
-
-
 
 };
 

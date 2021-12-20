@@ -11,9 +11,9 @@ class Lexer
 private:
     std::vector<Automaton*> automata;
     std::vector<Token*> tokens;
-    int lineNumber = 0; // idk if i should add this??
-    int maxRead = 0; // also idk??
-    Automaton* maxAutomaton{}; //?
+    int lineNumber = 0;
+    int maxRead = 0;
+    Automaton* maxAutomaton{};
 
     void CreateAutomata();
 
