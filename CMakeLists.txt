@@ -47,4 +47,6 @@ add_executable(Project1_Starter_Code
         Database.h
         Header.h
         Interpreter.cpp
-        Interpreter.h)
+        Interpreter.h
+        Graph.cpp
+        Graph.h)

@@ -5,6 +5,7 @@
 #include "DatalogProgram.h"
 #include "Relation.h"
 #include "Database.h"
+#include "Graph.h"
 
 class Interpreter { //not required class
 
@@ -24,22 +25,20 @@ public:
     void databaseToString();
     void queriesToString();
 
+    Relation evaluatePredicateBasic(const Predicate& p);
     Relation* evaluatePredicate(const Predicate& p); // optional recommended function
 
-//    constants are Datalog STRINGs and variables are Datalog IDs:
+    void schemesToRelationsHelper();
+    void factsToTuplesHelper();
+    void evaluateRules();
+    bool evaluateOneRule(Rule* rule);
+    vector<string> getAttributesFromRelation(const string& name);
+    Relation* getRelationByName(const string& name);
 
-//    for each scheme ‘s’
-//    create a relation using name and parameter values from ‘s’
-//    for each fact ‘f’
-//    make a tuple ‘t’ using the values from ‘f’
-//    add ‘t’ to relation with the same name as ‘f’
-//    for each query ‘q’
-//    get the relation ‘r’ with the same name as the query ‘q’
-//    select for each constant in the query ‘q’
-//    select for each pair of matching variables in ‘q’
-//    project using the positions of the variables in ‘q’
-//    rename to match the names of variables in ‘q’
-//    print the resulting relation
+    static vector<int> createIndexVecForProjectOnNewRelation(Relation* relation, Predicate* headPredicate);
+    //vector<int> Interpreter::createIndexVecForProjectOnNewRelation2 (Relation* relation, Predicate* headPredicate);
+
+
 
 };
 

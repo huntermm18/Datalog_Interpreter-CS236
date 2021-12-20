@@ -1,16 +1,9 @@
 
 #include "Interpreter.h"
+#include <iostream>
 
-void Interpreter::databaseToString() {
-   database.toString();
-}
 
-Interpreter::Interpreter(DatalogProgram *program) {
-   dataProgram = program;
-   constructorHelper(); // makes relations and adds them to database
-}
-
-void Interpreter::constructorHelper() {
+void Interpreter::schemesToRelationsHelper() {
    // make relation for each scheme and add to database
    for (auto & scheme : dataProgram->schemes) {
 
@@ -29,7 +22,8 @@ void Interpreter::constructorHelper() {
       database.tables.insert(std::pair<string, Relation*>(name, newRelation));
 
    }
-
+}
+void Interpreter::factsToTuplesHelper() {
    // make tuple for each fact and add to appropriate relation in the database
    for (auto & fact : dataProgram->facts) {
 
@@ -47,6 +41,41 @@ void Interpreter::constructorHelper() {
          }
       }
    }
+}
+
+void Interpreter::databaseToString() {
+   database.toString();
+}
+
+Interpreter::Interpreter(DatalogProgram *program) {
+   dataProgram = program;
+   constructorHelper(); // makes relations and adds them to database
+}
+
+void Interpreter::constructorHelper() {
+   // make relation for each scheme and add to database
+   Interpreter::schemesToRelationsHelper();
+
+   // make tuple for each fact and add to appropriate relation in the database
+   Interpreter::factsToTuplesHelper();
+}
+
+Relation Interpreter::evaluatePredicateBasic(const Predicate& p) {
+
+   Relation returnRelation = *database.tables.at(p.id);
+   vector<string> renameVec;
+
+   for (int i = 0 ; i < (int)p.parameters.size(); ++i) {
+      if (p.parameters.at(i)->isConstant) {
+         returnRelation.select(i, p.parameters.at(i)->p);
+      }
+   }
+      for (Parameter* parameter : p.parameters) {
+      renameVec.push_back(parameter->p);
+   }
+
+   returnRelation.rename(renameVec);
+   return returnRelation;
 }
 
 Relation* Interpreter::evaluatePredicate(const Predicate& p) {
@@ -70,7 +99,146 @@ Relation* Interpreter::evaluatePredicate(const Predicate& p) {
       }
    }
    //newRelation->toString();
+//   variables.clear();
+//   variableOrderList.clear();
    return newRelation;
+}
+
+int getIndexOfStringInVec(vector<string> stringVec, const string& targetString) {
+   for (unsigned int i = 0; i < stringVec.size(); ++i) {
+      if (stringVec.at(i) == targetString) {
+         return i;
+      }
+   }
+   return -1; // failed to find case
+}
+
+vector<int> Interpreter::createIndexVecForProjectOnNewRelation (Relation* relation, Predicate* headPredicate) {
+   vector<int> returnIndexes;
+
+   for (auto & parameter : headPredicate->parameters) {
+      for (unsigned int j = 0; j < relation->header->attributes.size(); ++j) {
+         if (relation->header->attributes.at(j) == parameter->p) {
+            returnIndexes.push_back(j);
+         }
+      }
+   }
+   return returnIndexes;
+}
+
+vector<string> Interpreter::getAttributesFromRelation(const string& name) {
+   return database.tables.at(name)->header->attributes;
+}
+
+Relation* Interpreter::getRelationByName(const string& name) {
+   return database.tables.at(name);
+}
+
+bool Interpreter::evaluateOneRule(Rule* rule) {
+   // evaluate the predicates on the right-hand side of the rule
+   // join the relations that result
+   // project the columns that appear in the head predicate
+   // rename the relation to make it union-compatible (optional?)
+   // union with the relation in the database
+
+   variableOrderList.clear();
+   variables.clear();
+
+   vector<Relation> relations;
+   bool madeChange = false;
+
+   rule->toString();
+   cout  << endl;
+
+   for (Predicate* p : rule->bodyPredicates) {
+      Relation newRelation = evaluatePredicateBasic(*p);
+      relations.push_back(newRelation);
+   }
+
+   Relation finalRelation;
+   finalRelation = relations[0];
+//   pair<Relation, bool> finalRelationJoinPair;
+
+   //finalRelation.toString();
+
+   for (unsigned int i = 1; i < relations.size(); ++i) { // skip 0
+      finalRelation = finalRelation.join(relations.at(i));
+   }
+
+   //project the columns of the head predicate onto the relation
+   vector<int> indexesForProject = createIndexVecForProjectOnNewRelation(&finalRelation, rule->headPredicate);
+   finalRelation.project(indexesForProject); // figure out indexes to project
+
+
+   //rename each attribute in the relation to match the relation in the database that matches the head predicate
+   string name = rule->headPredicate->id;
+   vector<string> newHeaderNames = getAttributesFromRelation(name);
+   finalRelation.rename(newHeaderNames);
+   //finalRelation.toString(); // debugging
+
+   //union
+   Relation* updateRelation = getRelationByName(name);
+   madeChange = updateRelation->unionWith(finalRelation);
+   updateRelation->ruleEvaluationToString(); // for project 4
+   updateRelation->rowsAddedByRules.clear(); // for project 4
+
+   return madeChange;
+}
+
+void Interpreter::evaluateRules() {
+
+   Graph graph(dataProgram->rules);
+   graph.dependencyGraphToString();
+   graph.depthFirstSearchForrest();
+   vector<set<int>> scc = graph.dfsForrestForSCCs();
+   int numPasses;
+   set<int>::iterator it;
+
+   cout << "Rule Evaluation" << endl;
+   for (const set<int>& currentSCC : scc) {
+      cout << "SCC: ";
+      for(it = currentSCC.begin(); it != currentSCC.end();) {
+         cout << "R" << *it;
+         if (++it != currentSCC.end()) {
+            cout << ",";
+         }
+      }
+      cout << endl;
+
+      numPasses = 0;
+      bool rulesUpdated = true;
+      while (rulesUpdated) {
+         numPasses++;
+         rulesUpdated = false;
+         for (int ruleNum : currentSCC) {
+            Rule* currentRule = dataProgram->rules.at(ruleNum);
+            if(evaluateOneRule(currentRule)) {
+               rulesUpdated = true;
+            }
+         }
+         bool isDependent = true;
+         if (currentSCC.size() == 1) { // check to see if the scc is only one rule and is not dependent on itself
+            Rule* currentRule = dataProgram->rules.at(*currentSCC.begin());
+            isDependent = false;
+            for (Predicate* bodyPredicate : currentRule->bodyPredicates) {
+               if (bodyPredicate->id == currentRule->headPredicate->id) {
+                  isDependent = true;
+               }
+            }
+         }
+         if (!isDependent) { // if the rule isn't dependent stop looping after first pass
+            rulesUpdated = false;
+         }
+      }
+      cout << numPasses << " passes: ";
+      for(it = currentSCC.begin(); it != currentSCC.end();) {
+         cout << "R" << *it;
+         if (++it != currentSCC.end()) {
+            cout << ",";
+         }
+      }
+      cout << endl;
+   }
 }
 
 void Interpreter::evaluateQuery(Predicate* query) {
@@ -108,9 +276,11 @@ void Interpreter::evaluateQuery(Predicate* query) {
 
 void Interpreter::evaluateAllQueries() {
    // runs evaluateQuery on each query in query list
+   cout << endl << "Query Evaluation" << endl;
    for (Predicate* query : dataProgram->queries) {
       evaluateQuery(query);
    }
+
 }
 
 void Interpreter::queriesToString() {

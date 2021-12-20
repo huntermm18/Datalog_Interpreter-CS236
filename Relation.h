@@ -8,13 +8,22 @@
 
 
 class Relation {
+protected:
+    vector<pair<int,int>> combineHeaders(Header* header2, Relation& returnRelation) const;
+    bool isJoinable(Tuple tuple1, Tuple tuple2, const vector<pair<int,int>>& matchIndexes);
+    Tuple combineTuples(Tuple tuple1, Tuple tuple2, const vector<pair<int,int>>& matchIndexes);
+
+
 public:
     string name;
     Header* header;
     set<Tuple> rows; // recommended to not use pointers
+    set<Tuple> rowsAddedByRules; // just for project 4 output
 
 
     Relation(string name, Header* header, set<Tuple> rows);
+    Relation(string name, Header header, set<Tuple> rows);
+    Relation();
 
 //    select: parameters are index and value (relation column and value to select)
    void select (int index, const string& value);
@@ -27,8 +36,14 @@ public:
 // The methods select, project, rename all return a new Relation object.
 
 
+   Relation join (Relation r2);
+   bool unionWith (Relation r2);
+
+
+
    // void addTuple(Tuple);
    void toString();
+   void ruleEvaluationToString();
 
 };
 

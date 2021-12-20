@@ -11,17 +11,12 @@ using namespace std;
 
 int main(int argc, char** argv) {
 
-    auto* lexer = new Lexer();
-
-
    // __________________write file to ss_________________________
    stringstream ss;
+   ifstream ifs (argv[1], std::ifstream::binary);
 
-   //std::ifstream ifs (R"(C:\Users\hunte\Downloads\Project1\Project1_Starter_Code\input.txt)", std::ifstream::binary);
-   std::ifstream ifs (argv[1], std::ifstream::binary);
-
-   std::filebuf* pbuf = ifs.rdbuf();
-   std::size_t size = pbuf->pubseekoff (0,std::ifstream::end,std::ifstream::in);
+   filebuf* pbuf = ifs.rdbuf();
+   size_t size = pbuf->pubseekoff (0,std::ifstream::end,std::ifstream::in);
    pbuf->pubseekpos (0,std::ifstream::in);
    char* buffer=new char[size];
    pbuf->sgetn (buffer,size);
@@ -31,23 +26,24 @@ int main(int argc, char** argv) {
    delete[] buffer;
    // ---------------------------------------------------------------
 
-    // cout << ss.str(); // for testing
-    string fileToString = ss.str();
-    lexer->Run(fileToString); // run file in lexer
-    //cout << "Total Tokens = " << lexer->GetTokensVectorSize();
+   auto* lexer = new Lexer();
+   string fileToString = ss.str();
+   lexer->Run(fileToString); // run file in lexer
+   //cout << "Total Tokens = " << lexer->GetTokensVectorSize();
 
    auto* parser = new Parser(lexer->TokensWithoutComments()); // create parser and pass in the tokens vector
-   bool parseSuccess = parser->parseProgram();
-   if (parseSuccess) {
-      // parser->toString();
-   }
-
+//   bool parseSuccess = parser->parseProgram();
+//   if (parseSuccess) {
+//      parser->toString();
+//   }
+   parser->parseProgram();
    auto* dataProgram = new DatalogProgram(parser->schemes, parser->facts, parser->queries, parser->rules, parser->domain);
    auto* interpreter = new Interpreter(dataProgram);
-
    //interpreter->databaseToString(); // for debugging
    //interpreter->queriesToString(); // for debugging
+   interpreter->evaluateRules();
    interpreter->evaluateAllQueries();
+
 
     delete lexer;
 

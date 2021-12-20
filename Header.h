@@ -1,6 +1,3 @@
-//
-// Created by hunte on 10/12/2021.
-//
 
 #ifndef PROJECT1_STARTER_CODE_HEADER_H
 #define PROJECT1_STARTER_CODE_HEADER_H
@@ -11,7 +8,7 @@
 
 class Header {
 public:
-    std::vector<std::string> attributes;
+    vector<string> attributes;
 
     explicit Header(vector<std::string> attributes) {
        this->attributes = std::move(attributes);

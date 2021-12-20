@@ -99,10 +99,10 @@ void Lexer::Run(std::string& input) {
    Token *EOFToken = new Token(TokenType::EOF_TYPE, "", lineNumber);
    tokens.push_back(EOFToken);
 
-   /* to string function no longer needed
-   for (unsigned int i = 0; i < tokens.size(); ++i) {
-      tokens.at(i)->toString();
-   } */
+   //to string function no longer needed
+//   for (unsigned int i = 0; i < tokens.size(); ++i) {
+//      tokens.at(i)->toString();
+//   }
 }
 
 vector<Token*> Lexer::TokensWithoutComments() {
